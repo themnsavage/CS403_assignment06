@@ -28,8 +28,8 @@ Shape subclass: Sphere[
     ]
 
     getInfo[
-	|topLine bottomLine info|
-	topLine:= 'Sphere: ', super getName, ',', '  Radius= ', radius asString.
+	| topLine bottomLine |
+	topLine:= 'Sphere: ', super getName, ',', '  Radius=', radius asString.
 	bottomLine:= 'Surface Area: ', self getArea asString, ', Volume: ', self getVolume asString.
 	Transcript show: topLine.
 	Transcript cr tab.
