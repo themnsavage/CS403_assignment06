@@ -8,8 +8,8 @@ Shape subclass: Cylinder[
     ]
 
     newCylinder: name radius: radiusValue height: heightValue[
-        radius:= radiusValue asFloat.
-        height:= heightValue asFloat.
+        radius:= radiusValue asNumber asFloat.
+        height:= heightValue asNumber asFloat.
         super setName: name.
     ]
 

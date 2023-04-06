@@ -9,9 +9,9 @@ Shape subclass: Box[
     ]
 
     newBox: name length: lengthValue width: widthValue height: heightValue[
-        length:= lengthValue asFloat.
-        width:= widthValue asFloat.
-        height:= heightValue asFloat.
+        length:= lengthValue asNumber asFloat.
+        width:= widthValue asNumber asFloat.
+        height:= heightValue asNumber asFloat.
         super setName: name.
     ]
 

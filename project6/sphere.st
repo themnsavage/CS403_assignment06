@@ -12,7 +12,7 @@ Shape subclass: Sphere[
     ]
 
     setRadius: value[
-        radius := value asFloat.
+        radius := value asNumber asFloat.
     ]
 
     getRadius[
@@ -36,4 +36,20 @@ Shape subclass: Sphere[
 	Transcript show: bottomLine.
 	Transcript cr.	
     ]
+
+    "test: operator conditionOne: conditionOneValue conditionTwo: conditionTwoValue[
+	operator == '=='
+	ifTrue[ ^conditionOneValue == conditionTwoValue].
+	operator == '!='
+	ifTrue[ ^conditionOneValue ~= conditionTwoValue].
+	operator == '>'
+	ifTrue[ ^conditionOneValue > conditionTwoValue].
+	operator == '<'
+	ifTrue[ ^conditionOneValue < conditionTwoValue].
+	operator == '>='
+	ifTrue[ ^conditionOneValue >= conditionTwoValue].
+	operator == '<='
+	ifTrue[ ^conditionOneValue <= conditionTwoValue].
+	^false
+    ]"
 ]

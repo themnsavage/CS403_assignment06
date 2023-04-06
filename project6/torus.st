@@ -10,12 +10,12 @@ Shape subclass: Torus[
     newTorus: name radiusOne: radiusOneValue radiusTwo: radiusTwoValue[
 	radiusOneValue > radiusTwoValue
         ifTrue:[
-            bigRadius:= radiusOneValue asFloat.
-            smallRadius:= radiusTwoValue asFloat.
+            bigRadius:= radiusOneValue asNumber asFloat.
+            smallRadius:= radiusTwoValue asNumber asFloat.
             ]
         ifFalse:[
-            bigRadius:= radiusTwoValue asFloat.
-            smallRadius:= radiusOneValue asFloat.
+            bigRadius:= radiusTwoValue asNumber asFloat.
+            smallRadius:= radiusOneValue asNumber asFloat.
             ].
 	super setName: name.
     ]
