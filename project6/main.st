@@ -12,6 +12,8 @@ Object subclass: Manager[
 		fileName:= Smalltalk getArgv:1.
 		arrayOfShapes:= nil.
 		shapeCount:= 0.
+		self setShapeCount.
+		self setArrayOfShapes.
 	]
 
 	setShapeCount[
@@ -197,10 +199,11 @@ Object subclass: Manager[
 
 	maxCommand: array[
 		|areaArray volumeArray maxArea maxVolume|
-		
+		'array passed: ' display.
+		array displayNl.
+
 		areaArray:= self getAreaArray: array.
 		volumeArray:= self getVolumeArray: array.
-		
 		maxArea:= areaArray at: 1.
 		maxVolume:= volumeArray at: 1.
 
@@ -234,13 +237,13 @@ Object subclass: Manager[
 			totalVolume:= totalVolume + volume.
 		].
 
-		Transcript show: 'total(Surface Area)= ', totalArea asString.
+		Transcript show: 'total(Surface Area)= ', (totalArea roundTo: 0.01) asString.
 		Transcript cr.
-		Transcript show: 'total(Volume)= ', totalVolume asString.
+		Transcript show: 'total(Volume)= ', (totalVolume roundTo: 0.01) asString.
 		Transcript cr. 
 	]
 
-	averageCommand: array[
+	avgCommand: array[
 		|areaArray volumeArray avgArea avgVolume count|
 		count:= array size.
 		areaArray:= self getAreaArray: array.
@@ -250,17 +253,17 @@ Object subclass: Manager[
 		areaArray do:[:area|
 			avgArea:= avgArea + area.
 		].
-		avgArea:= avgArea // count.
+		avgArea:= avgArea / count.
 
 		avgVolume:= 0.
 		volumeArray do:[:volume|
 			avgVolume:= avgVolume + volume.
 		].
-		avgVolume:= avgVolume // count.
+		avgVolume:= avgVolume / count.
 
-		Transcript show: 'avg(Surface Area)= ', avgArea asString.
+		Transcript show: 'avg(Surface Area)= ', (avgArea roundTo: 0.01) asString.
 		Transcript cr.
-		Transcript show: 'avg(Volume)= ', avgVolume asString.
+		Transcript show: 'avg(Volume)= ', (avgVolume roundTo: 0.01) asString.
 		Transcript cr.
 	]
 
@@ -350,25 +353,102 @@ Object subclass: Manager[
 		].
 		
 		^condition substrings: ' '
+	]
+	
+	isValidCommand: command[
+		|alpha digits validCommands n commandType x|
+		(command substrings: ' ') size = 1 ifFalse:[^false].		
+		alpha:= 'abcdefghijklnmopqrstuvwxyz'.
+		digits:= '1234567890'.
+		validCommands := #('count' 'print' 'max' 'min' 'total' 'avg').
+		n:= command substrings: alpha.
+		commandType:= command substrings: digits.
+		
+		(n size) = 1 ifTrue:[
+			n:= n at: 1.
+			n:= n substrings: digits.
+			n size = 0 ifFalse:[^false].
+		].
+		
+		commandType:= commandType at: 1.
+
+		validCommands do:[:c|
+			x:= commandType substrings: c.
+			(x size) = 0 ifTrue:[^true].	
+		].
+
+		^false
+	]
+	
+	executeFilter: array N: n[
+		|testCondition left operator right valid filterArray|
+		filterArray:= array deepCopy.
+		1 to: n do:[:index|
+			testCondition:= self getTestCondition: index.
+			left:= testCondition at: 1.
+			operator:= testCondition at: 2.
+			right:= testCondition at: 3.
+
+			filterArray:= filterArray select:[:shape|
+				shape test: operator conditionOne: left conditionTwo: right. 
+			].
+		].
+		
+		^filterArray
+	]
+
+	executeCommand: command[
+		|array n commandType numbers alpha|
+		alpha:= 'abcdefghijklnmopqrstuvwxyz'.
+		numbers:= '1234567890'.
+		
+		array:= arrayOfShapes deepCopy.
+		
+		commandType:= (command substrings: numbers) at: 1.
+		n := command substrings: alpha.
+		(n size) = 1 
+		ifTrue:[
+			n:= (n at: 1) asNumber.
+		]
+		ifFalse:[
+			n:= false.
+		].
+					
+		n ~= false ifTrue:[
+			array:= self executeFilter: array N: n.
+		].
+
+		commandType = 'count' ifTrue:[self countCommand: array].
+		commandType = 'print' ifTrue:[self printCommand: array].
+		commandType = 'min' ifTrue:[self minCommand: array].
+		commandType = 'max' ifTrue:[self maxCommand: array].
+		commandType = 'total' ifTrue:[self totalCommand: array].
+		commandType = 'avg' ifTrue:[self avgCommand: array].
+		Transcript cr.
+	]
+
+	startMain[
+		|stop command isValid|
+		stop:= false.
+		[stop] whileFalse:[
+			command:= self getCommand.
+			command = 'quit'
+			ifTrue:[
+				^false
+			].
+			
+			isValid:= self isValidCommand: command.
+			isValid
+			ifTrue:[
+				self executeCommand: command.
+			]
+			ifFalse:[
+				'invalid command' displayNl.
+			].
+		].
 	]	
 
 ].
 
 manager:= Manager new.
-testCondition:= manager getTestCondition: 4.
-testCondition printNl.
-"
-manager setShapeCount.
-manager setArrayOfShapes.
-manager printAllShapes.
-"
-
-"
-sphere:= Sphere new.
-sphere newSphere: 'globe' radius: '1.23'.
-sphere getInfo.
-
-value:= sphere test:'>=' conditionOne: 'volume' conditionTwo: '6.79'.
-value printNl.
-"
- 
+manager startMain.
