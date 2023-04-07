@@ -1,10 +1,11 @@
 Shape subclass: Box[
-    | length width height |
+    | length width height  type |
 
     init [
         length:= 0 asFloat.
         width:= 0 asFloat.
         height:= 0 asFloat.
+	type:= 'box'.
         ^ super init
     ]
 

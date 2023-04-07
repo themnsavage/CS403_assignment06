@@ -1,8 +1,9 @@
 Shape subclass: Sphere[
-    | radius |
+    | radius type |
 
     init [
         radius := 0 asFloat.
+	type:= 'sphere'.
         ^ super init
     ]
 
@@ -37,19 +38,37 @@ Shape subclass: Sphere[
 	Transcript cr.	
     ]
 
-    "test: operator conditionOne: conditionOneValue conditionTwo: conditionTwoValue[
-	operator == '=='
-	ifTrue[ ^conditionOneValue == conditionTwoValue].
-	operator == '!='
-	ifTrue[ ^conditionOneValue ~= conditionTwoValue].
-	operator == '>'
-	ifTrue[ ^conditionOneValue > conditionTwoValue].
-	operator == '<'
-	ifTrue[ ^conditionOneValue < conditionTwoValue].
-	operator == '>='
-	ifTrue[ ^conditionOneValue >= conditionTwoValue].
-	operator == '<='
-	ifTrue[ ^conditionOneValue <= conditionTwoValue].
+    test: operator conditionOne: conditionOneValue conditionTwo: conditionTwoValue[
+	|leftValue rightValue|
+
+	conditionOneValue = 'area'
+	ifTrue:[
+		leftValue:= self getArea.
+		rightValue:= conditionTwoValue asNumber asFloat.
+	].
+	conditionOneValue = 'volume'
+	ifTrue:[
+		leftValue:= self getVolume.
+		rightValue:= conditionTwoValue asNumber asFloat.
+	].
+	conditionOneValue = 'type'
+	ifTrue:[
+		leftValue:= type.
+		rightValue:= conditionTwoValue.
+	].
+	
+	operator = '=='
+	ifTrue:[ ^leftValue = rightValue].
+	operator = '!='
+	ifTrue:[ ^leftValue ~= rightValue].
+	operator = '>'
+	ifTrue:[ ^leftValue  > rightValue].
+	operator = '<'
+	ifTrue:[ ^leftValue < rightValue].
+	operator = '>='
+	ifTrue:[ ^leftValue >= rightValue].
+	operator = '<='
+	ifTrue:[ ^leftValue <= rightValue].
 	^false
-    ]"
+    ]
 ]

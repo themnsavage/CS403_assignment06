@@ -1,9 +1,10 @@
 Shape subclass: Cylinder[
-    | radius height |
+    | radius height type |
 
     init [
         radius:= 0 asFloat.
         height:= 0 asFloat.
+	type:= 'cylinder'.
         ^ super init
     ]
 

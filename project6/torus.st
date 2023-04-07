@@ -1,9 +1,10 @@
 Shape subclass: Torus[
-    | smallRadius bigRadius |
+    | smallRadius bigRadius type |
 
     init [
         smallRadius:= 0 asFloat.
         bigRadius:= 0 asFloat.
+	type:= 'torus'.
         ^ super init
     ]
 
